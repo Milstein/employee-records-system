@@ -10,13 +10,11 @@ socket.on('add', data => {
 socket.on('update', data => {
     vm.fetchEmployees();
     notify("An employee has been updated.");
-    artyom.say("An employee has been updated.");
 })
 
 socket.on('delete', data => {
     vm.fetchEmployees();
     notify("An employee has been removed.");
-    artyom.say("An employee has been removed.");
 })
 
 var notify = body => {
