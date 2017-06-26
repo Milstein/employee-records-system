@@ -1,0 +1,42 @@
+<v-dialog v-model="addEmployeeModal" persistent width="600">
+    <v-card>
+        <v-card-row class="indigo darken-1">
+            <v-card-title class="white--text"><v-icon light left>person</v-icon> New Employee</v-card-title>
+        </v-card-row>
+        <v-card-row>
+            <v-card-text>
+                <v-alert error v-model="add_error">
+                    All fields are required.
+                </v-alert>
+                <v-text-field v-model="employee.name" label="Full Name"></v-text-field>
+                <v-text-field v-model="employee.email" label="Email Address"></v-text-field>
+                <v-text-field v-model="employee.contact" label="Contact Number"></v-text-field>
+                <v-text-field v-model="employee.company" label="Company Name"></v-text-field>
+            </v-card-text>
+        </v-card-row>
+        <v-card-row actions>
+            <v-btn class="grey--text darken-1" flat="flat" @click.native="closeAddEmployeeModal">Close</v-btn>
+            <v-btn class="pink--text darken-1" flat="flat" @click.native="addEmployee">Submit</v-btn>
+        </v-card-row>
+    </v-card>
+</v-dialog>
+
+<v-dialog v-model="editEmployeeModal" persistent width="600">
+    <v-card>
+        <v-card-row class="indigo darken-1">
+            <v-card-title class="white--text"><v-icon light left>person</v-icon> Edit Employee</v-card-title>
+        </v-card-row>
+        <v-card-row>
+            <v-card-text>
+                <v-text-field v-model="employee.name" label="Full Name"></v-text-field>
+                <v-text-field v-model="employee.email" label="Email Address"></v-text-field>
+                <v-text-field v-model="employee.contact" label="Contact Number"></v-text-field>
+                <v-text-field v-model="employee.company" label="Company Name"></v-text-field>
+            </v-card-text>
+        </v-card-row>
+        <v-card-row actions>
+            <v-btn class="grey--text darken-1" flat="flat" @click.native="closeEditEmployeeModal">Close</v-btn>
+            <v-btn class="pink--text darken-1" flat="flat" @click.native="updateEmployee(employee._id)">Submit</v-btn>
+        </v-card-row>
+    </v-card>
+</v-dialog>

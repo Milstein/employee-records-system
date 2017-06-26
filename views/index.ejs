@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include partials/head %>
+</head>
+
+<body>
+    <v-app id="app">
+        <% include partials/toolbar %>
+            <main>
+                <v-container fluid>
+                    <v-progress-linear :indeterminate="true" v-show="loader"></v-progress-linear>
+                    <v-layout row wrap>
+                        <v-flex sm12 xs6 md6 lg6 xl6>
+                        </v-flex>
+                        <v-flex sm12 xs6 md6 lg6 xl6>
+                            <v-select v-bind:items="fields" v-model="selectedField" label="Sort Employees" dark single-line auto></v-select>
+                        </v-flex>
+                    </v-layout>
+                    <table class="table" v-show="employeeContainer">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Company</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(e, index) in filterBy(orderBy(employees, selectedField), search)" :key="index">
+                                <td class="text-xs-center">[[ e.name ]]</td>
+                                <td class="text-xs-center">[[ e.email ]]</td>
+                                <td class="text-xs-center">[[ e.contact ]]</td>
+                                <td class="text-xs-center">[[ e.company ]]</td>
+                                <td class="text-xs-center">
+                                    <v-btn icon class="blue--text" @click.native.stop="openEditEmployeeModal(e)">
+                                        <v-icon>mode_edit</v-icon>
+                                    </v-btn>
+                                    <v-btn icon class="red--text" @click.native.stop="removeEmployee(e._id)">
+                                        <v-icon>delete_forever</v-icon>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <v-btn floating large class="pink" id="addButton" @click.native="openAddEmployeeModal">
+                        <v-icon light>add</v-icon>
+                    </v-btn>
+                </v-container>
+                <% include partials/modals %>
+            </main>
+    </v-app>
+    <% include partials/scripts %>
+</body>
+
+</html>
