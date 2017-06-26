@@ -1,39 +1,41 @@
-var socket = io();
+'use strict';
 
-socket.on('add', function (data) {
+const socket = io();
+
+socket.on('add', data => {
     vm.employees.push(data);
     notify("A new employee has been added.");
-    artyom.say("A new employee has been added.");
 })
 
-socket.on('update', function (data) {
+socket.on('update', data => {
     vm.fetchEmployees();
     notify("An employee has been updated.");
     artyom.say("An employee has been updated.");
 })
 
-socket.on('delete', function (data) {
+socket.on('delete', data => {
     vm.fetchEmployees();
     notify("An employee has been removed.");
     artyom.say("An employee has been removed.");
 })
 
-var notify = function (body) {
+var notify = body => {
     Push.create("Employee Records System", {
         body,
         icon: 'static/img/user.ico',
         timeout: 4000,
-        onClick: function () {
+        onClick() {
             window.focus();
             this.close();
         }
     });
+    artyom.say(body);
 }
 
-var commands = [
+const commands = [
     {
         indexes: ["reload", "refresh", "sync", "clear"], // These spoken words will trigger the execution of the command
-        action: function (i) { // Action to be executed when a index match with spoken word
+        action(i) { // Action to be executed when a index match with spoken word
             if(i == 3) {
                 vm.search = "";
             } else {
@@ -44,25 +46,25 @@ var commands = [
     {
         indexes: ["search *", "find *"],
         smart: true,
-        action: function(i, wildcard) {
+        action(i, wildcard) {
             vm.search = wildcard;
         }
     }
-]
+];
 
 artyom.addCommands(commands); // Add the command with addCommands method. Now
 
 function startContinuousArtyom() {
     artyom.fatality(); // use this to stop any of
 
-    setTimeout(function () { // if you use artyom.fatality , wait 250 ms to initialize again.
+    setTimeout(() => { // if you use artyom.fatality , wait 250 ms to initialize again.
         artyom.initialize({
             lang: "en-US", // A lot of languages are supported. Read the docs !
             continuous: true, // Artyom will listen forever
             listen: true, // Start recognizing
             debug: false, // Show everything in the console
             speed: 1 // talk normally
-        }).then(function () {
+        }).then(() => {
             console.log("Ready to work !");
         });
     }, 250);
@@ -122,13 +124,13 @@ var vm = new Vue({
         addEmployee() {
             if (!this.employee.name || !this.employee.email || !this.employee.contact || !this.employee.company) {
                 this.add_error = true;
-                setTimeout(function () {
+                setTimeout(() => {
                     vm.add_error = false;
                 }, 4000);
                 return false;
             }
             axios.post('/api/employees', this.employee).then(response => {
-                var res = response.data;
+                const res = response.data;
                 if (res.success) {
                     socket.emit('add', res.doc); //real-time adding
                     vm.clearEmployeeModel();
@@ -149,7 +151,7 @@ var vm = new Vue({
         },
         updateEmployee(_id) {
             axios.put('/api/employees', this.employee).then(response => {
-                var res = response.data;
+                const res = response.data;
                 if (res.success) {
                     socket.emit('update', true); //real-time updating
                 } else {
@@ -160,8 +162,8 @@ var vm = new Vue({
             })
         },
         removeEmployee(_id) {
-            axios.delete('/api/employees/' + _id).then(response => {
-                var res = response.data;
+            axios.delete(`/api/employees/${_id}`).then(response => {
+                const res = response.data;
                 if (res.success) {
                     socket.emit('delete', true); //real-time updating
                 } else {
